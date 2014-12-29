@@ -4,21 +4,38 @@
 #include <ofxTUI.h>
 
 #include <Issue.h>
+#include <List.h>
 #include <Grid.h>
 class ofApp : public ofBaseApp{
 	private:
 		std::vector<Issue> issues_;
 		ofxTUIWindow win;
+		List list_;
 
 	public:
-		ofApp():win(1,1),issues_(){};
+		ofApp():win(1,1),issues_(),list_(issues_){};
 		virtual ~ofApp(){};
 		void setup(){
 			win.addFont("fonts/Inconsolata.otf",10);
 			win.loadColorScheme("defaultColorScheme.xml");
 			win.fitWindowSize();
+
+			win.addSubWindow(list_,2,0);
+
+			win.callSetup();
+
+			//test
+			list_.addIssue("1.1");
+			list_.addIssue("1.2");
+			list_.addIssue("1.3");
+
+			sleep(1.5);
+
+			list_.loadCurrentIssues();
 		};
-		void update(){};
+		void update(){
+			win.callUpdate();
+		};
 		void draw(){
 			win.fillAllBackground();
 
@@ -35,9 +52,9 @@ class ofApp : public ofBaseApp{
 			win.setColor("Normal");
 			win.addStr("Eternal Force Scheduler");
 
-			win.setPos(1,1);
-			win.setColor("None");
-			win.addStr("Toggle");
+			win.setPos(1,0);
+			win.setColor("Normal");
+			win.addStr("TaskList");
 
 			win.callDraw();
 		};
