@@ -21,14 +21,7 @@ class Grid : public ofxTUIBaseWindow{
 
 	bool isRate(Issue& i){
 		for (auto&& j : i.tasks_) {
-			int difftime = j.time_-unix_time;
-			int day = 0;
-			if(difftime>=0){
-				day = (int)((float)(difftime)/86400.0+0.5);
-			}else{
-				day = (int)((float)(difftime)/86400.0-0.5);
-			}
-			if(day<0 && j.check_ == 0){
+			if(j.time_<unix_time && j.check_ == 0){
 				return true;
 			}
 		}
@@ -44,11 +37,12 @@ class Grid : public ofxTUIBaseWindow{
 
 			//check
 			if(isRate(i)){
+				unsigned int deadline = unix_time-(unsigned int)now_time+86400;
 				i.tasks_.clear();
-				i.addTask(unix_time,0);
-				i.addTask(unix_time+86400*1,0);
-				i.addTask(unix_time+86400*3,0);
-				i.addTask(unix_time+86400*7,0);
+				i.addTask((unsigned int)deadline+(unsigned int)(86400*0),0);
+				i.addTask((unsigned int)deadline+(unsigned int)(86400*1),0);
+				i.addTask((unsigned int)deadline+(unsigned int)(86400*3),0);
+				i.addTask((unsigned int)deadline+(unsigned int)(86400*7),0);
 				ofNotifyEvent(triggerEvent);
 			}
 
@@ -61,9 +55,9 @@ class Grid : public ofxTUIBaseWindow{
 				int difftime = j.time_-unix_time;
 				int day = 0;
 				if(difftime>=0){
-					day = (int)((float)(difftime)/86400.0+0.5);
+					day = (int)((float)(difftime)/86400.0);
 				}else{
-					day = (int)((float)(difftime)/86400.0-0.5);
+					day = (int)((float)(difftime)/86400.0-1.0);
 				}
 
 

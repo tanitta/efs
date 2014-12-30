@@ -1,6 +1,7 @@
 #pragma once
 
 unsigned int unix_time;
+unsigned int now_time;
 #include "ofMain.h"
 #include <ofxTUI.h>
 
@@ -13,6 +14,8 @@ class ofApp : public ofBaseApp{
 	private:
 		std::vector<Issue> issues_;
 		ofxTUIWindow win;
+		ofxTUIButton addButton_;
+		ofxTUITextbox addTextbox_;
 		List list_;
 		Grid grid_;
 		DataBase dataBase_;
@@ -21,27 +24,24 @@ class ofApp : public ofBaseApp{
 		// unsigned int unix_time;
 
 	public:
-		ofApp():win(1,1),issues_(),list_(issues_),grid_(issues_),dataBase_(issues_),counter(0){};
+		ofApp():win(1,1),addButton_(1,5),addTextbox_(1,9),issues_(),list_(issues_),grid_(issues_),dataBase_(issues_),counter(0){};
 		virtual ~ofApp(){};
 		void setup(){
 			unix_time = ofGetUnixTime();
+			now_time = ofGetHours()*60*60 + ofGetMinutes()*60 + ofGetSeconds();
+
+			dataBase_.load();
+
 			win.addFont("fonts/Inconsolata.otf",10);
 			win.loadColorScheme("defaultColorScheme.xml");
 			win.fitWindowSize();
-
-			// list_.addIssue("1.1");
-			// list_.addIssue("1.2");
-			// list_.addIssue("1.3");
-			dataBase_.load();
-
-			win.addSubWindow(list_,2,0);
-			win.addSubWindow(grid_,2,22);
-
+			win.addSubWindow(addTextbox_,2,9);
+			addButton_.addStr("add");
+			addButton_.addListener(this,&ofApp::addNewIssue);
+			win.addSubWindow(addButton_,2,19);
+			win.addSubWindow(list_,5,0);
+			win.addSubWindow(grid_,5,22);
 			win.callSetup();
-
-			//test
-
-			sleep(1.5);
 
 			grid_.addListener(&list_,&List::loadCurrentIssues);
 
@@ -49,14 +49,24 @@ class ofApp : public ofBaseApp{
 
 
 		};
+
+		void addNewIssue(){
+			if(addTextbox_() !=""){
+				list_.addIssue(addTextbox_());
+			}
+			addTextbox_("");
+		};
+
 		void update(){
-			unix_time = ofGetUnixTime() + counter;
+			//debug
+			// unix_time += 86400/600;
+			// now_time += 86400/600;
+			// now_time = now_time%86400;
+
+			unix_time = ofGetUnixTime();
+			now_time = ofGetHours()*60*60 + ofGetMinutes()*60 + ofGetSeconds();
+
 			win.callUpdate();
-			counter += 86400/600;
-			// if(counter%600 == 0){
-			// 	list_.loadCurrentIssues();
-			// }
-			std::cout<<"unix_time : "<<unix_time<<endl;;
 		};
 		void draw(){
 			win.fillAllBackground();
@@ -74,9 +84,13 @@ class ofApp : public ofBaseApp{
 			win.setColor("Normal");
 			win.addStr("Eternal Force Scheduler");
 
-			win.setPos(1,0);
+			win.setPos(2,0);
 			win.setColor("Normal");
-			win.addStr("TaskList");
+			win.addStr("AddIssue:");
+
+			win.setPos(4,0);
+			win.setColor("Normal");
+			win.addStr("TaskList:");
 
 			win.callDraw();
 		};
@@ -112,5 +126,4 @@ class ofApp : public ofBaseApp{
 		};
 		void dragEvent(ofDragInfo dragInfo){};
 		void gotMessage(ofMessage msg){};
-
 };
