@@ -13,5 +13,21 @@ class Issue {
 		void addTask(unsigned int time, int check){
 			tasks_.push_back(Task(time,check));
 		}
+
+		bool isCompleted(){
+			bool b = true;
+			for (auto&& t : tasks_) {
+				if(t.check_ == 1){
+					b = b && true;
+				}else{
+					b = b && false;
+				}
+			}
+			return b;
+		}
+
+		bool operator==(bool b){
+			return isCompleted() == b;
+		}
 };
 
