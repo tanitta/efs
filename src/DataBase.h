@@ -68,16 +68,10 @@ class DataBase {
 
 			int tasks = xml.getValue("Issues:Issue_"+std::to_string(i)+":Tasks:Number",0);
 			for (int t = 0; t < tasks; t++) {
-				std::cout<<"TranslateXmlToIssues i:"<<i<<" t:"<<t<<std::endl;
 				unsigned int time = xml.getValue("Issues:Issue_"+std::to_string(i)+":Tasks:Task_"+std::to_string(t)+":Time",0);
 				int check = xml.getValue("Issues:Issue_"+std::to_string(i)+":Tasks:Task_"+std::to_string(t)+":Check",0);
 				issue_ref_[i].tasks_.push_back(Task(time,check));
-				std::cout<<issue_ref_[i].tasks_[t].check_<<std::endl;
 			}
-			// std::cout<<xml.getValue("Issues:Issue_0:Tasks:Number",0)<<std::endl;
-			// int tasknumber = xml.getValue("Issues:Issue_0:Tasks:Number",0)
-			// std::cout<<tasknumber<<std::endl;
-			// xml.popTag();
 		}
 	};
 

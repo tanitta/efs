@@ -41,11 +41,6 @@ class List : public ofxTUIBaseWindow{
 				for (auto&& t : i.tasks_) {
 					int difftime = t.time_-unix_time;
 					int day = 0;
-					// if(difftime>=0){
-					// 	day = (int)((float)(difftime)/86400.0+0.5);
-					// }else{
-					// 	day = (int)((float)(difftime)/86400.0-0.5);
-					// }
 					day = (int)((float)(difftime)/86400.0);
 					if(0 < difftime && difftime < 86400){
 						if(t.check_ < 1){
@@ -107,8 +102,6 @@ class List : public ofxTUIBaseWindow{
 
 		void addIssue(std::string index_name){
 			issue_ref_.push_back(Issue(index_name));
-			int nowTime = ofGetHours()*60*60 + ofGetMinutes()*60 + ofGetSeconds();
-			cout<<"nowTime"<<nowTime<<endl;
 			unsigned int deadline = unix_time-(unsigned int)now_time+86400;
 			issue_ref_.back().addTask(deadline,0);
 			issue_ref_.back().addTask((unsigned int)deadline+(unsigned int)(86400*1),0);
